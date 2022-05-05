@@ -9,7 +9,7 @@
  * Class constructor
  * @param {Object} canvas - Canvas HTML object
  */
-function Render(canvas) {
+ function Render(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
@@ -44,6 +44,16 @@ Render.prototype.set_image = function (image_name, image_path) {
 }
 
 /**
+ * Get image object from array list
+ * @param {string} image_name - A identification of image
+ * @return {Object} - Return object Image()
+ */
+Render.prototype.get_image = function (image_name) {
+    const img_obj = this.image_array.find(item => item.key === image_name);
+    return img_obj['value'];
+}
+
+/**
  * Render the image
  * @param {string} image_name - A identification of image
  * @param {number} x - Horizontal position in pixels
@@ -53,10 +63,27 @@ Render.prototype.set_image = function (image_name, image_path) {
  * @return {void}
  */
 Render.prototype.draw_image = function (image_name, x, y, Width, Height) {
-    const img_obj = this.image_array.find(item => item.key === image_name);
     const _width = Width || img_obj['value'].width;
     const _height = Height || img_obj['value'].height;
-    this.ctx.drawImage(img_obj['value'], x, y, _width, _height);
+    this.ctx.drawImage(this.get_image(image_name), x, y, _width, _height);
+}
+
+/**
+ * Render the image
+ * @param {string} image_name - A identification of image
+ * @param {number} sx - The x coordinate where to start clipping
+ * @param {number} sy - The y coordinate where to start clipping	
+ * @param {number} [sWidth] - The width of the clipped image
+ * @param {number} [sHeight] - The height of the clipped image	
+ * @param {number} dx - The x coordinate where to place the image on the canvas
+ * @param {number} dy - The y coordinate where to place the image on the canvas		
+ * @param {number} [dWidth] - The width of the image to use (stretch or reduce the image)	
+ * @param {number} [dHeight] - The height of the image to use (stretch or reduce the image)
+ * @return {void}
+ */
+Render.prototype.draw_image = function (image_name, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+    const img_obj = this.image_array.find(item => item.key === image_name);
+    this.ctx.drawImage(img_obj['value'], sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 }
 
 /**
